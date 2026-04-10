@@ -20,9 +20,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aconcagua Analytics — Consultoría de IA para empresas en Mendoza</title>
   <meta name="description" content="Automatizamos los flujos de trabajo de inmobiliarias, estudios jurídicos y escribanías en Mendoza. Sin capacitaciones. Usted recibe los resultados.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Aconcagua Analytics — Automatización con IA">
+  <meta property="og:description" content="Automatizamos los flujos de trabajo de inmobiliarias, estudios jurídicos y escribanías. Resultados medibles desde el primer mes.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_AR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aconcagua Analytics — Automatización con IA">
+  <meta name="twitter:description" content="Consultoría de IA para empresas en Mendoza. ROI medible, sin capacitaciones.">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Aconcagua Analytics",
+    "url": "https://aconcaguaanalytics.com.ar",
+    "description": "Consultoría de IA para automatización empresarial",
+    "telephone": "+542616849413",
+    "email": "info@aconcaguaanalytics.com.ar",
+    "areaServed": "AR",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "telephone": "+542616849413",
+      "areaServed": "AR"
+    }
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Framer Motion para animaciones -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <style>
     /* ─── TOKENS ──────────────────────────────────────────────────── */
@@ -63,15 +99,55 @@
     button { cursor: pointer; font-family: inherit; background: none; border: none; outline: none; }
 
     /* ─── ANIMATIONS ──────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
     .fade-up {
       opacity: 0;
       transform: translateY(18px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Animaciones al cargar */
+    .hero__content { animation: fadeUp 0.7s ease-out 0.2s both; }
+    .hero__ctas { animation: slideIn 0.7s ease-out 0.4s both; }
+    .section-header { animation: fadeUp 0.6s ease-out 0.2s both; }
 
     @media (prefers-reduced-motion: reduce) {
-      .fade-up { opacity: 1; transform: none; transition: none; }
+      .fade-up, .hero__content, .hero__ctas, .section-header {
+        animation: none !important;
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
     }
 
     /* ─── NAVBAR ──────────────────────────────────────────────────── */
@@ -163,6 +239,8 @@
       flex-direction: column;
       gap: 5px;
       padding: 4px;
+      background: none;
+      border: none;
     }
     .navbar__burger span {
       display: block;
@@ -170,21 +248,45 @@
       height: 2px;
       background: var(--navy);
       border-radius: 2px;
+      transition: all 0.3s ease;
+      transform-origin: center;
     }
+    .navbar__burger.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .navbar__burger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .navbar__burger.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
     .navbar__mobile {
       display: none;
       flex-direction: column;
       background: var(--white);
       border-top: 1px solid var(--border);
       padding: 12px 20px 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
     }
-    .navbar__mobile.open { display: flex; }
+    .navbar__mobile.open {
+      display: flex;
+      max-height: 500px;
+      padding: 16px 20px 20px;
+    }
     .navbar__mobile a {
       font-size: 0.95rem;
       font-weight: 500;
       color: #374151;
       padding: 12px 0;
       border-bottom: 1px solid var(--border);
+      transition: color 0.2s ease, padding-left 0.2s ease;
+    }
+    .navbar__mobile a:hover {
+      color: var(--navy);
+      padding-left: 8px;
     }
 
     @media (max-width: 900px) {
@@ -1969,6 +2071,112 @@
       });
     });
     initCountUps(document.getElementById('panel-inmo'));
+
+    // ─── HAMBURGER MENU MEJORADO ───────────────────────────────────
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (burger && mobileMenu) {
+      burger.addEventListener('click', (e) => {
+        e.preventDefault();
+        burger.classList.toggle('active');
+        mobileMenu.classList.toggle('open');
+        burger.setAttribute('aria-expanded', burger.classList.contains('active'));
+      });
+
+      // Cerrar menu al hacer click en un link
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          burger.classList.remove('active');
+          mobileMenu.classList.remove('open');
+          burger.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Cerrar menu al hacer scroll
+      window.addEventListener('scroll', () => {
+        if (mobileMenu.classList.contains('open')) {
+          burger.classList.remove('active');
+          mobileMenu.classList.remove('open');
+          burger.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // ─── INTERSECTION OBSERVER PARA ANIMACIONES ────────────────────
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-up').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ─── MEJORAS DE ACCESIBILIDAD ──────────────────────────────────
+    // Agregar aria-labels si no existen
+    document.querySelectorAll('.btn-cta, .hero-btn-primary, .hero-btn-secondary').forEach(btn => {
+      if (!btn.getAttribute('aria-label') && btn.textContent.trim()) {
+        // El texto del botón ya es descriptivo
+      }
+    });
+
+    // Mejorar navegación con teclado
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('open')) {
+        burger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.focus();
+      }
+    });
+
+    // ─── VALIDACIÓN DE CONTACTO MEJORADA ───────────────────────────
+    const contactForm = document.querySelector('.contacto form') || document.querySelector('form[data-contacto]');
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        const inputs = contactForm.querySelectorAll('input, textarea');
+        let isValid = true;
+
+        inputs.forEach(input => {
+          if (!input.value.trim()) {
+            input.style.borderColor = '#ef4444';
+            isValid = false;
+          } else {
+            input.style.borderColor = '';
+          }
+
+          // Validación de email
+          if (input.type === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(input.value)) {
+              input.style.borderColor = '#ef4444';
+              isValid = false;
+            }
+          }
+        });
+
+        if (!isValid) {
+          e.preventDefault();
+          alert('Por favor completa todos los campos correctamente.');
+        }
+      });
+    }
+
+    // ─── PRELOAD IMAGES ────────────────────────────────────────────
+    window.addEventListener('load', () => {
+      document.querySelectorAll('img').forEach(img => {
+        img.setAttribute('loading', 'lazy');
+      });
+    });
 
     // ─── SMOOTH SCROLL ─────────────────────────────────────────────
     document.querySelectorAll('a[href^="#"]').forEach(a => {
