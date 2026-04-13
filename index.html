@@ -61,48 +61,34 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <style>
-    /* ─── CANVAS PARTICLES ────────────────────────────────────── */
-    .particles-bg {
+    /* ─── TSPARTICLES ─────────────────────────────────────────── */
+    .particle-container {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none;
       z-index: 0;
-      display: block;
+      pointer-events: none;
     }
 
-    .services {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .services > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .nichos {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .nichos > * {
-      position: relative;
-      z-index: 1;
-    }
-
+    .services,
+    .nichos,
     .contacto {
       position: relative;
       overflow: hidden;
     }
 
-    .contacto > * {
+    .services > *:not(.particle-container),
+    .nichos > *:not(.particle-container),
+    .contacto > *:not(.particle-container) {
       position: relative;
       z-index: 1;
     }
   </style>
+
+  <!-- tsParticles CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
   <style>
     /* ─── TOKENS ──────────────────────────────────────────────────── */
@@ -1419,7 +1405,7 @@
 
   <!-- SERVICES GRID -->
   <section class="services" id="servicios">
-    <canvas class="particles-bg" data-particles="servicios"></canvas>
+    <div class="particle-container" id="particles-servicios"></div>
     <div class="section-header fade-up">
       <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Servicios</span>
       <h2>Precio fijo, ROI medible desde el primer mes</h2>
@@ -1622,7 +1608,7 @@
 
   <!-- NICHOS -->
   <section class="nichos" id="nichos">
-    <canvas class="particles-bg" data-particles="nichos"></canvas>
+    <div class="particle-container" id="particles-nichos"></div>
     <div class="nichos__inner">
       <div class="section-header fade-up" style="padding:0;margin-bottom:0;">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Nichos</span>
@@ -1763,7 +1749,7 @@
 
   <!-- CONTACTO -->
   <section class="contacto" id="contacto">
-    <canvas class="particles-bg" data-particles="contacto"></canvas>
+    <div class="particle-container" id="particles-contacto"></div>
     <div class="contacto__inner">
       <div class="contacto__left fade-up">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Contacto</span>
@@ -2219,150 +2205,84 @@
       });
     });
 
-    // ─── PARTÍCULAS INTERACTIVAS ────────────────────────────────
-    class ParticleSystem {
-      constructor(canvas) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
-        this.particles = [];
-        this.mouseX = canvas.width / 2;
-        this.mouseY = canvas.height / 2;
-        this.color = '#4FC3C8'; // Cian
-        this.opacity = 0.5;
-
-        this.resizeCanvas();
-        this.createParticles();
-        this.setupEventListeners();
-        this.animate();
-      }
-
-      resizeCanvas() {
-        const section = this.canvas.parentElement;
-        const dpr = window.devicePixelRatio || 1;
-
-        this.canvas.width = section.offsetWidth * dpr;
-        this.canvas.height = section.offsetHeight * dpr;
-
-        this.canvas.style.width = section.offsetWidth + 'px';
-        this.canvas.style.height = section.offsetHeight + 'px';
-
-        this.ctx.scale(dpr, dpr);
-        this.createParticles();
-      }
-
-      createParticles() {
-        const particleCount = Math.floor(this.canvas.width / 80);
-        this.particles = [];
-
-        for (let i = 0; i < particleCount; i++) {
-          this.particles.push({
-            x: Math.random() * this.canvas.width,
-            y: Math.random() * this.canvas.height,
-            vx: (Math.random() - 0.5) * 0.5,
-            vy: (Math.random() - 0.5) * 0.5,
-            radius: Math.random() * 1.5 + 0.5
-          });
+    // ─── TSPARTICLES — CONFIGURACIÓN ───────────────────────────
+    const particlesConfig = {
+      background: { color: { value: "transparent" } },
+      fpsLimit: 60,
+      particles: {
+        number: {
+          value: 80,
+          density: { enable: true, area: 800 }
+        },
+        color: { value: "#00E5FF" },
+        opacity: {
+          value: 0.35,
+          random: false
+        },
+        size: {
+          value: { min: 1, max: 2.5 },
+          random: true
+        },
+        links: {
+          enable: true,
+          color: "#00E5FF",
+          distance: 150,
+          opacity: 0.3,
+          width: 0.8
+        },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "none",
+          random: true,
+          straight: false,
+          outModes: { default: "bounce" }
         }
-      }
-
-      setupEventListeners() {
-        const section = this.canvas.parentElement;
-
-        section.addEventListener('mousemove', (e) => {
-          const rect = this.canvas.getBoundingClientRect();
-          this.mouseX = e.clientX - rect.left;
-          this.mouseY = e.clientY - rect.top;
-        });
-
-        section.addEventListener('mouseleave', () => {
-          this.mouseX = this.canvas.width / 2;
-          this.mouseY = this.canvas.height / 2;
-        });
-
-        window.addEventListener('resize', () => this.resizeCanvas());
-      }
-
-      update() {
-        this.particles.forEach(p => {
-          // Movimiento libre
-          p.x += p.vx;
-          p.y += p.vy;
-
-          // Rebote en bordes
-          if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
-          if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
-
-          // Mantener en bounds
-          p.x = Math.max(0, Math.min(this.canvas.width, p.x));
-          p.y = Math.max(0, Math.min(this.canvas.height, p.y));
-
-          // Atracción hacia cursor
-          const dx = this.mouseX - p.x;
-          const dy = this.mouseY - p.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 200) {
-            p.vx += dx * 0.0001;
-            p.vy += dy * 0.0001;
+      },
+      interactivity: {
+        events: {
+          onHover: {
+            enable: true,
+            mode: "grab"
           }
-
-          // Limitar velocidad
-          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-          if (speed > 2) {
-            p.vx = (p.vx / speed) * 2;
-            p.vy = (p.vy / speed) * 2;
-          }
-        });
-      }
-
-      draw() {
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Dibujar partículas
-        this.ctx.fillStyle = this.color;
-        this.particles.forEach(p => {
-          this.ctx.globalAlpha = this.opacity;
-          this.ctx.beginPath();
-          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          this.ctx.fill();
-        });
-
-        // Dibujar líneas entre partículas cercanas
-        this.ctx.strokeStyle = this.color;
-        this.ctx.globalAlpha = this.opacity * 0.3;
-        this.ctx.lineWidth = 0.5;
-
-        for (let i = 0; i < this.particles.length; i++) {
-          for (let j = i + 1; j < this.particles.length; j++) {
-            const p1 = this.particles[i];
-            const p2 = this.particles[j];
-            const dx = p1.x - p2.x;
-            const dy = p1.y - p2.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 150) {
-              this.ctx.beginPath();
-              this.ctx.moveTo(p1.x, p1.y);
-              this.ctx.lineTo(p2.x, p2.y);
-              this.ctx.stroke();
-            }
+        },
+        modes: {
+          grab: {
+            distance: 180,
+            links: { opacity: 0.55 }
           }
         }
+      },
+      detectRetina: true
+    };
 
-        this.ctx.globalAlpha = 1;
-      }
+    // Inicializar con Intersection Observer (ahorra CPU/batería)
+    const particleSections = [
+      "particles-servicios",
+      "particles-nichos",
+      "particles-contacto"
+    ];
 
-      animate() {
-        this.update();
-        this.draw();
-        requestAnimationFrame(() => this.animate());
-      }
-    }
+    const particleInstances = {};
 
-    // Inicializar partículas en cada sección
-    document.querySelectorAll('.particles-bg').forEach(canvas => {
-      new ParticleSystem(canvas);
+    const particleObserver = new IntersectionObserver((entries) => {
+      entries.forEach(async (entry) => {
+        const id = entry.target.id;
+        if (entry.isIntersecting) {
+          if (!particleInstances[id]) {
+            particleInstances[id] = await tsParticles.load(id, particlesConfig);
+          }
+        } else {
+          if (particleInstances[id]) {
+            particleInstances[id].pause();
+          }
+        }
+      });
+    }, { threshold: 0.1 });
+
+    particleSections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) particleObserver.observe(el);
     });
 
     // ─── SMOOTH SCROLL ─────────────────────────────────────────────
