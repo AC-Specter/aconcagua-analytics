@@ -75,12 +75,13 @@
     /* hero__photo = z-index 1 (fondo), partículas = z-index 2, contenido = z-index 3 */
     .hero__photo { z-index: 1; }
 
-    .hero {
+    .hero, .como {
       position: relative;
       overflow: hidden;
     }
 
-    .hero > *:not(.particle-container):not(.hero__photo) {
+    .hero > *:not(.particle-container):not(.hero__photo),
+    .como > *:not(.particle-container) {
       position: relative;
       z-index: 3;
     }
@@ -1622,7 +1623,7 @@
       <div class="section-header fade-up" style="padding:0;margin-bottom:0;">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Nichos</span>
         <h2>Resultados concretos para cada tipo de empresa</h2>
-        <p>Cada industria tiene procesos distintos y tiempos distintos. Antes de implementar cualquier flujo, auditamos su operativa específica para identificar dónde está el mayor potencial de mejora.</p>
+        <p>Cada industria tiene procesos distintos y tiempos distintos. Los siguientes son algunos ejemplos de nichos — las implementaciones se adaptan a cualquier sector o rubro. Antes de implementar cualquier flujo, auditamos su operativa específica para identificar dónde está el mayor potencial de mejora.</p>
       </div>
       <div class="nichos__tabs fade-up">
         <button class="tab-btn active" data-tab="inmo">Inmobiliarias</button>
@@ -1641,7 +1642,7 @@
                 <span class="t-before">30–45 min</span>
                 <span class="t-arrow">&#8594;</span>
                 <span class="t-after">2 min</span>
-                <span>Descripción optimizada para ZonaProp y Argenprop</span>
+                <span>Descripción optimizada para los portales que la inmobiliaria requiera</span>
               </div>
               <div class="niche-task">
                 <span class="t-before">45–60 min</span>
@@ -1683,12 +1684,6 @@
                 <span class="t-after">5 min</span>
                 <span>Armado de legajos y carpetas de cliente</span>
               </div>
-              <div class="niche-task">
-                <span class="t-before">Manual</span>
-                <span class="t-arrow">&#8594;</span>
-                <span class="t-after">Automático</span>
-                <span>Clasificación y borrador de respuesta a consultas frecuentes</span>
-              </div>
             </div>
           </div>
         </div>
@@ -1726,7 +1721,8 @@
   </section>
 
   <!-- CÓMO FUNCIONA -->
-  <section class="como">
+  <section class="como" id="como">
+    <div id="particles-como" class="particle-container" style="clip-path: inset(0);"></div>
     <div class="como__inner">
       <div class="section-header fade-up">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Cómo funciona</span>
@@ -2272,6 +2268,26 @@
         container.canvas.size.width = w;
         container.refresh();
       }
+    });
+
+    // ─── PARTÍCULAS SECCIÓN CÓMO FUNCIONA ──────────────────────────
+    tsParticles.load("particles-como", {
+      background: { color: { value: "transparent" } },
+      fpsLimit: 60,
+      particles: {
+        number: { value: 50, density: { enable: true, area: 900 } },
+        color: { value: "#4FC3C8" },
+        opacity: { value: 0.35 },
+        size: { value: { min: 1, max: 2 }, random: true },
+        links: { enable: true, color: "#4FC3C8", distance: 130, opacity: 0.25, width: 0.5 },
+        move: { enable: true, speed: 0.6, direction: "none", random: true, outModes: { default: "bounce" } }
+      },
+      interactivity: {
+        detectsOn: "window",
+        events: { onHover: { enable: true, mode: "grab" } },
+        modes: { grab: { distance: 200, links: { opacity: 0.65 } } }
+      },
+      detectRetina: true
     });
 
     // ─── SMOOTH SCROLL ─────────────────────────────────────────────
