@@ -192,57 +192,60 @@
     }
 
     /* ─── HERO LOGO DECO ─────────────────────────────────────────── */
-    /* ── Logo SVG: animaciones por partes ── */
-    @keyframes grapeFloat {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-7px); }
-    }
-    @keyframes grapeGlow {
-      0%, 100% { filter: drop-shadow(0 0 0px rgba(79,195,200,0)); }
-      50%       { filter: drop-shadow(0 0 8px rgba(79,195,200,0.9)); }
-    }
-    @keyframes cyanPulse {
-      0%, 100% { r: 20; opacity: 1; filter: drop-shadow(0 0 6px rgba(79,195,200,0.6)); }
-      50%       { r: 22; opacity: 0.85; filter: drop-shadow(0 0 16px rgba(79,195,200,1)); }
-    }
-    @keyframes mountainRise {
-      0%, 100% { transform: translateY(0); opacity: 0.9; }
-      50%       { transform: translateY(-4px); opacity: 1; }
-    }
-    @keyframes textFade {
-      0%, 100% { opacity: 0.75; }
-      50%       { opacity: 1; }
-    }
-
+    /* ── Logo SVG hero ── */
     .hero__logo-deco {
       position: absolute;
-      right: 7%;
+      right: 5%;
       top: 50%;
       transform: translateY(-50%);
       z-index: 3;
-      width: 320px;
+      width: 300px;
     }
 
     .logo-svg { width: 100%; height: auto; overflow: visible; }
 
-    /* Cada uva flota con distinto delay */
-    .grape.g1 { animation: grapeFloat 4.0s ease-in-out infinite 0.0s, grapeGlow 4.0s ease-in-out infinite 0.0s; }
-    .grape.g2 { animation: grapeFloat 4.2s ease-in-out infinite 0.3s, grapeGlow 4.2s ease-in-out infinite 0.3s; }
-    .grape.g3 { animation: grapeFloat 3.8s ease-in-out infinite 0.6s, grapeGlow 3.8s ease-in-out infinite 0.6s; }
-    .grape.g4 { animation: grapeFloat 4.5s ease-in-out infinite 0.2s, grapeGlow 4.5s ease-in-out infinite 0.2s; }
-    .grape.g5 { animation: cyanPulse  3.5s ease-in-out infinite 0.0s; } /* cian — pulso especial */
-    .grape.g6 { animation: grapeFloat 4.1s ease-in-out infinite 0.8s, grapeGlow 4.1s ease-in-out infinite 0.8s; }
-    .grape.g7 { animation: grapeFloat 3.9s ease-in-out infinite 0.5s, grapeGlow 3.9s ease-in-out infinite 0.5s; }
-    .grape.g8 { animation: grapeFloat 4.3s ease-in-out infinite 0.1s, grapeGlow 4.3s ease-in-out infinite 0.1s; }
+    /* Transiciones base — sin animación continua */
+    .grape, .logo-mountains, .logo-stem, .logo-text-1, .logo-text-2 {
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+                  filter 0.35s ease,
+                  opacity 0.35s ease;
+    }
 
-    /* Montañas suben suavemente */
-    .logo-mountains { animation: mountainRise 6s ease-in-out infinite; transform-origin: center bottom; }
+    /* Hover por parte: uvas */
+    .grape:hover {
+      transform: translateY(-8px) scale(1.15);
+      filter: drop-shadow(0 0 10px rgba(79,195,200,0.9));
+      cursor: pointer;
+    }
 
-    /* Texto aparece y desaparece */
-    .logo-text-1, .logo-text-2 { animation: textFade 5s ease-in-out infinite; }
-    .logo-text-2 { animation-delay: 0.4s; }
+    /* Uva cian resalta más */
+    .grape.g5 { fill: #4FC3C8; }
+    .grape.g5:hover {
+      transform: translateY(-10px) scale(1.2);
+      filter: drop-shadow(0 0 16px rgba(79,195,200,1));
+    }
 
-    @media (max-width: 600px) {
+    /* Hover montañas */
+    .logo-mountains:hover {
+      transform: translateY(-5px);
+      filter: drop-shadow(0 4px 12px rgba(79,195,200,0.6));
+      cursor: pointer;
+    }
+
+    /* Hover texto */
+    .logo-text-1:hover, .logo-text-2:hover {
+      fill: #4FC3C8;
+      filter: drop-shadow(0 0 8px rgba(79,195,200,0.7));
+      cursor: pointer;
+    }
+
+    /* Hover stem */
+    .logo-stem:hover {
+      stroke: #4FC3C8;
+      filter: drop-shadow(0 0 6px rgba(79,195,200,0.8));
+    }
+
+    @media (max-width: 768px) {
       .hero__logo-deco { display: none; }
     }
 
@@ -1247,7 +1250,7 @@
       gap: 48px;
       align-items: center;
     }
-    .footer-logo img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+    .footer-logo img { height: 90px; width: 90px; border-radius: 0; object-fit: contain; background: transparent; }
     .footer-social h4 {
       font-size: 0.8rem;
       font-weight: 600;
@@ -1893,7 +1896,7 @@
   <footer class="footer-top">
     <div class="footer-top__inner">
       <div class="footer-logo">
-        <img src="Logo.jpg" alt="Aconcagua Analytics">
+        <img src="Logo-nuevo.png.jpg" alt="Aconcagua Analytics">
       </div>
       <div class="footer-social">
         <h4>Seguinos en las redes</h4>
