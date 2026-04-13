@@ -70,13 +70,35 @@
       height: 100%;
       pointer-events: none;
       z-index: 0;
+      display: block;
     }
 
-    .services, .nichos, .contacto {
+    .services {
       position: relative;
+      overflow: hidden;
     }
 
-    .services > *, .nichos > *, .contacto > * {
+    .services > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nichos {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nichos > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .contacto {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contacto > * {
       position: relative;
       z-index: 1;
     }
@@ -2215,9 +2237,17 @@
       }
 
       resizeCanvas() {
-        const rect = this.canvas.getBoundingClientRect();
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
+        const section = this.canvas.parentElement;
+        const dpr = window.devicePixelRatio || 1;
+
+        this.canvas.width = section.offsetWidth * dpr;
+        this.canvas.height = section.offsetHeight * dpr;
+
+        this.canvas.style.width = section.offsetWidth + 'px';
+        this.canvas.style.height = section.offsetHeight + 'px';
+
+        this.ctx.scale(dpr, dpr);
+        this.createParticles();
       }
 
       createParticles() {
