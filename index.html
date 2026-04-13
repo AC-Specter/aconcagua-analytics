@@ -61,6 +61,28 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <style>
+    /* ─── CANVAS PARTICLES ────────────────────────────────────── */
+    .particles-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .services, .nichos, .contacto {
+      position: relative;
+    }
+
+    .services > *, .nichos > *, .contacto > * {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+
+  <style>
     /* ─── TOKENS ──────────────────────────────────────────────────── */
     :root {
       --navy:       #1B3A6B;
@@ -1375,6 +1397,7 @@
 
   <!-- SERVICES GRID -->
   <section class="services" id="servicios">
+    <canvas class="particles-bg" data-particles="servicios"></canvas>
     <div class="section-header fade-up">
       <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Servicios</span>
       <h2>Precio fijo, ROI medible desde el primer mes</h2>
@@ -1577,6 +1600,7 @@
 
   <!-- NICHOS -->
   <section class="nichos" id="nichos">
+    <canvas class="particles-bg" data-particles="nichos"></canvas>
     <div class="nichos__inner">
       <div class="section-header fade-up" style="padding:0;margin-bottom:0;">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Nichos</span>
@@ -1717,6 +1741,7 @@
 
   <!-- CONTACTO -->
   <section class="contacto" id="contacto">
+    <canvas class="particles-bg" data-particles="contacto"></canvas>
     <div class="contacto__inner">
       <div class="contacto__left fade-up">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Contacto</span>
@@ -2170,6 +2195,144 @@
       document.querySelectorAll('img').forEach(img => {
         img.setAttribute('loading', 'lazy');
       });
+    });
+
+    // ─── PARTÍCULAS INTERACTIVAS ────────────────────────────────
+    class ParticleSystem {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.mouseX = canvas.width / 2;
+        this.mouseY = canvas.height / 2;
+        this.color = '#4FC3C8'; // Cian
+        this.opacity = 0.5;
+
+        this.resizeCanvas();
+        this.createParticles();
+        this.setupEventListeners();
+        this.animate();
+      }
+
+      resizeCanvas() {
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
+      }
+
+      createParticles() {
+        const particleCount = Math.floor(this.canvas.width / 80);
+        this.particles = [];
+
+        for (let i = 0; i < particleCount; i++) {
+          this.particles.push({
+            x: Math.random() * this.canvas.width,
+            y: Math.random() * this.canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            radius: Math.random() * 1.5 + 0.5
+          });
+        }
+      }
+
+      setupEventListeners() {
+        const section = this.canvas.parentElement;
+
+        section.addEventListener('mousemove', (e) => {
+          const rect = this.canvas.getBoundingClientRect();
+          this.mouseX = e.clientX - rect.left;
+          this.mouseY = e.clientY - rect.top;
+        });
+
+        section.addEventListener('mouseleave', () => {
+          this.mouseX = this.canvas.width / 2;
+          this.mouseY = this.canvas.height / 2;
+        });
+
+        window.addEventListener('resize', () => this.resizeCanvas());
+      }
+
+      update() {
+        this.particles.forEach(p => {
+          // Movimiento libre
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Rebote en bordes
+          if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+          if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+
+          // Mantener en bounds
+          p.x = Math.max(0, Math.min(this.canvas.width, p.x));
+          p.y = Math.max(0, Math.min(this.canvas.height, p.y));
+
+          // Atracción hacia cursor
+          const dx = this.mouseX - p.x;
+          const dy = this.mouseY - p.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 200) {
+            p.vx += dx * 0.0001;
+            p.vy += dy * 0.0001;
+          }
+
+          // Limitar velocidad
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (speed > 2) {
+            p.vx = (p.vx / speed) * 2;
+            p.vy = (p.vy / speed) * 2;
+          }
+        });
+      }
+
+      draw() {
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Dibujar partículas
+        this.ctx.fillStyle = this.color;
+        this.particles.forEach(p => {
+          this.ctx.globalAlpha = this.opacity;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+        });
+
+        // Dibujar líneas entre partículas cercanas
+        this.ctx.strokeStyle = this.color;
+        this.ctx.globalAlpha = this.opacity * 0.3;
+        this.ctx.lineWidth = 0.5;
+
+        for (let i = 0; i < this.particles.length; i++) {
+          for (let j = i + 1; j < this.particles.length; j++) {
+            const p1 = this.particles[i];
+            const p2 = this.particles[j];
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 150) {
+              this.ctx.beginPath();
+              this.ctx.moveTo(p1.x, p1.y);
+              this.ctx.lineTo(p2.x, p2.y);
+              this.ctx.stroke();
+            }
+          }
+        }
+
+        this.ctx.globalAlpha = 1;
+      }
+
+      animate() {
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+      }
+    }
+
+    // Inicializar partículas en cada sección
+    document.querySelectorAll('.particles-bg').forEach(canvas => {
+      new ParticleSystem(canvas);
     });
 
     // ─── SMOOTH SCROLL ─────────────────────────────────────────────
