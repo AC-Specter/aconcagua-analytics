@@ -192,35 +192,55 @@
     }
 
     /* ─── HERO LOGO DECO ─────────────────────────────────────────── */
-    @keyframes floatLogo {
-      0%   { transform: translateY(0px) rotate(0deg); }
-      25%  { transform: translateY(-12px) rotate(1deg); }
-      50%  { transform: translateY(-6px) rotate(-1deg); }
-      75%  { transform: translateY(-14px) rotate(0.5deg); }
-      100% { transform: translateY(0px) rotate(0deg); }
+    /* ── Logo SVG: animaciones por partes ── */
+    @keyframes grapeFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-7px); }
     }
-
-    @keyframes glowPulse {
-      0%, 100% { filter: drop-shadow(0 0 18px rgba(79,195,200,0.35)); }
-      50%       { filter: drop-shadow(0 0 36px rgba(79,195,200,0.65)); }
+    @keyframes grapeGlow {
+      0%, 100% { filter: drop-shadow(0 0 0px rgba(79,195,200,0)); }
+      50%       { filter: drop-shadow(0 0 8px rgba(79,195,200,0.9)); }
+    }
+    @keyframes cyanPulse {
+      0%, 100% { r: 20; opacity: 1; filter: drop-shadow(0 0 6px rgba(79,195,200,0.6)); }
+      50%       { r: 22; opacity: 0.85; filter: drop-shadow(0 0 16px rgba(79,195,200,1)); }
+    }
+    @keyframes mountainRise {
+      0%, 100% { transform: translateY(0); opacity: 0.9; }
+      50%       { transform: translateY(-4px); opacity: 1; }
+    }
+    @keyframes textFade {
+      0%, 100% { opacity: 0.75; }
+      50%       { opacity: 1; }
     }
 
     .hero__logo-deco {
       position: absolute;
-      right: 8%;
+      right: 7%;
       top: 50%;
       transform: translateY(-50%);
       z-index: 3;
-      width: 260px;
-      animation: floatLogo 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite;
+      width: 320px;
     }
 
-    .hero__logo-deco img {
-      width: 100%;
-      height: auto;
-      border-radius: 24px;
-      opacity: 0.92;
-    }
+    .logo-svg { width: 100%; height: auto; overflow: visible; }
+
+    /* Cada uva flota con distinto delay */
+    .grape.g1 { animation: grapeFloat 4.0s ease-in-out infinite 0.0s, grapeGlow 4.0s ease-in-out infinite 0.0s; }
+    .grape.g2 { animation: grapeFloat 4.2s ease-in-out infinite 0.3s, grapeGlow 4.2s ease-in-out infinite 0.3s; }
+    .grape.g3 { animation: grapeFloat 3.8s ease-in-out infinite 0.6s, grapeGlow 3.8s ease-in-out infinite 0.6s; }
+    .grape.g4 { animation: grapeFloat 4.5s ease-in-out infinite 0.2s, grapeGlow 4.5s ease-in-out infinite 0.2s; }
+    .grape.g5 { animation: cyanPulse  3.5s ease-in-out infinite 0.0s; } /* cian — pulso especial */
+    .grape.g6 { animation: grapeFloat 4.1s ease-in-out infinite 0.8s, grapeGlow 4.1s ease-in-out infinite 0.8s; }
+    .grape.g7 { animation: grapeFloat 3.9s ease-in-out infinite 0.5s, grapeGlow 3.9s ease-in-out infinite 0.5s; }
+    .grape.g8 { animation: grapeFloat 4.3s ease-in-out infinite 0.1s, grapeGlow 4.3s ease-in-out infinite 0.1s; }
+
+    /* Montañas suben suavemente */
+    .logo-mountains { animation: mountainRise 6s ease-in-out infinite; transform-origin: center bottom; }
+
+    /* Texto aparece y desaparece */
+    .logo-text-1, .logo-text-2 { animation: textFade 5s ease-in-out infinite; }
+    .logo-text-2 { animation-delay: 0.4s; }
 
     @media (max-width: 600px) {
       .hero__logo-deco { display: none; }
@@ -1405,7 +1425,24 @@
     <div class="hero__photo"></div>
     <!-- Logo decorativo derecha -->
     <div class="hero__logo-deco">
-      <img src="Logo-nuevo.png.jpg" alt="Aconcagua Analytics">
+      <svg class="logo-svg" viewBox="0 0 220 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Aconcagua Analytics">
+        <!-- Stem -->
+        <path class="logo-stem" d="M110 18 C110 18 118 8 126 4" stroke="#1B3A6B" stroke-width="5" stroke-linecap="round"/>
+        <!-- Grapes — each animates independently -->
+        <circle class="grape g1" cx="90"  cy="42"  r="20" fill="#1B3A6B"/>
+        <circle class="grape g2" cx="130" cy="42"  r="20" fill="#1B3A6B"/>
+        <circle class="grape g3" cx="70"  cy="78"  r="20" fill="#1B3A6B"/>
+        <circle class="grape g4" cx="110" cy="78"  r="20" fill="#1B3A6B"/>
+        <circle class="grape g5" cx="150" cy="78"  r="20" fill="#4FC3C8"/>
+        <circle class="grape g6" cx="90"  cy="114" r="20" fill="#1B3A6B"/>
+        <circle class="grape g7" cx="130" cy="114" r="20" fill="#1B3A6B"/>
+        <circle class="grape g8" cx="110" cy="148" r="20" fill="#1B3A6B"/>
+        <!-- Mountains -->
+        <path class="logo-mountains" d="M30 195 L80 148 L110 170 L140 148 L190 195 Z" fill="#1B3A6B"/>
+        <!-- Text -->
+        <text class="logo-text-1" x="110" y="218" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="18" fill="#1B3A6B" letter-spacing="2">ACONCAGUA</text>
+        <text class="logo-text-2" x="110" y="236" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="400" font-size="13" fill="#1B3A6B" letter-spacing="4">ANALYTICS</text>
+      </svg>
     </div>
     <div class="hero__content fade-up">
       <h1>la inteligencia<br>artificial para<br>su empresa</h1>
