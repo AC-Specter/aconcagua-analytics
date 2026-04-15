@@ -1,0 +1,15 @@
+﻿# Herramientas de desarrollo
+.claude/
+marketingskills/
+superpowers/
+ui-ux-pro-max-skill/
+pr-body.txt
+
+# Archivos temporales
+*.txt
+*.md
+!README.md
+
+# OS
+.DS_Store
+Thumbs.db

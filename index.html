@@ -20,9 +20,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aconcagua Analytics — Consultoría de IA para empresas en Mendoza</title>
   <meta name="description" content="Automatizamos los flujos de trabajo de inmobiliarias, estudios jurídicos y escribanías en Mendoza. Sin capacitaciones. Usted recibe los resultados.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Aconcagua Analytics — Automatización con IA">
+  <meta property="og:description" content="Automatizamos los flujos de trabajo de inmobiliarias, estudios jurídicos y escribanías. Resultados medibles desde el primer mes.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_AR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aconcagua Analytics — Automatización con IA">
+  <meta name="twitter:description" content="Consultoría de IA para empresas en Mendoza. ROI medible, sin capacitaciones.">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Aconcagua Analytics",
+    "url": "https://aconcaguaanalytics.com.ar",
+    "description": "Consultoría de IA para automatización empresarial",
+    "telephone": "+542616849413",
+    "email": "info@aconcaguaanalytics.com.ar",
+    "areaServed": "AR",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "telephone": "+542616849413",
+      "areaServed": "AR"
+    }
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Framer Motion para animaciones -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ─── TSPARTICLES ─────────────────────────────────────────── */
+    .particle-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* hero__photo = z-index 1 (fondo), partículas = z-index 2, contenido = z-index 3 */
+    .hero__photo { z-index: 1; }
+
+    .hero, .como {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero > *:not(.particle-container):not(.hero__photo),
+    .como > *:not(.particle-container) {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Contener canvas dentro del hero */
+    #particles-hero {
+      clip-path: inset(0);
+    }
+
+    #particles-hero canvas {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+    }
+  </style>
+
+  <!-- tsParticles CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
 
   <style>
     /* ─── TOKENS ──────────────────────────────────────────────────── */
@@ -63,15 +140,123 @@
     button { cursor: pointer; font-family: inherit; background: none; border: none; outline: none; }
 
     /* ─── ANIMATIONS ──────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
     .fade-up {
       opacity: 0;
       transform: translateY(18px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Animaciones al cargar */
+    .hero__content { animation: fadeUp 0.7s ease-out 0.2s both; }
+    .hero__ctas { animation: slideIn 0.7s ease-out 0.4s both; }
+    .section-header { animation: fadeUp 0.6s ease-out 0.2s both; }
 
     @media (prefers-reduced-motion: reduce) {
-      .fade-up { opacity: 1; transform: none; transition: none; }
+      .fade-up, .hero__content, .hero__ctas, .section-header {
+        animation: none !important;
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* ─── HERO LOGO DECO ─────────────────────────────────────────── */
+    /* ── Logo SVG hero ── */
+    .hero__logo-deco {
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 300px;
+    }
+
+    .logo-svg { width: 100%; height: auto; overflow: visible; }
+
+    /* Transiciones base — sin animación continua */
+    .grape, .logo-mountains, .logo-stem, .logo-text-1, .logo-text-2 {
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+                  filter 0.35s ease,
+                  opacity 0.35s ease;
+    }
+
+    /* Hover por parte: uvas */
+    .grape:hover {
+      transform: translateY(-8px) scale(1.15);
+      filter: drop-shadow(0 0 10px rgba(79,195,200,0.9));
+      cursor: pointer;
+    }
+
+    /* Uva cian resalta más */
+    .grape.g5 { fill: #4FC3C8; }
+    .grape.g5:hover {
+      transform: translateY(-10px) scale(1.2);
+      filter: drop-shadow(0 0 16px rgba(79,195,200,1));
+    }
+
+    /* Hover montañas */
+    .logo-mountains:hover {
+      transform: translateY(-5px);
+      filter: drop-shadow(0 4px 12px rgba(79,195,200,0.6));
+      cursor: pointer;
+    }
+
+    /* Hover texto */
+    .logo-text-1:hover, .logo-text-2:hover {
+      fill: #4FC3C8;
+      filter: drop-shadow(0 0 8px rgba(79,195,200,0.7));
+      cursor: pointer;
+    }
+
+    /* Hover stem */
+    .logo-stem:hover {
+      stroke: #4FC3C8;
+      filter: drop-shadow(0 0 6px rgba(79,195,200,0.8));
+    }
+
+    @media (max-width: 768px) {
+      .hero__logo-deco { display: none; }
+    }
+
+    /* ─── NAVBAR LOGO TEXT ───────────────────────────────────────── */
+    .navbar__logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
     }
 
     /* ─── NAVBAR ──────────────────────────────────────────────────── */
@@ -94,10 +279,11 @@
       gap: 40px;
     }
     .navbar__logo img {
-      height: 42px;
-      width: 42px;
-      border-radius: 50%;
-      object-fit: cover;
+      height: 80px;
+      width: auto;
+      border-radius: 0;
+      object-fit: contain;
+      mix-blend-mode: multiply;
     }
     .navbar__links {
       display: flex;
@@ -163,6 +349,8 @@
       flex-direction: column;
       gap: 5px;
       padding: 4px;
+      background: none;
+      border: none;
     }
     .navbar__burger span {
       display: block;
@@ -170,21 +358,45 @@
       height: 2px;
       background: var(--navy);
       border-radius: 2px;
+      transition: all 0.3s ease;
+      transform-origin: center;
     }
+    .navbar__burger.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .navbar__burger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .navbar__burger.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
     .navbar__mobile {
       display: none;
       flex-direction: column;
       background: var(--white);
       border-top: 1px solid var(--border);
       padding: 12px 20px 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
     }
-    .navbar__mobile.open { display: flex; }
+    .navbar__mobile.open {
+      display: flex;
+      max-height: 500px;
+      padding: 16px 20px 20px;
+    }
     .navbar__mobile a {
       font-size: 0.95rem;
       font-weight: 500;
       color: #374151;
       padding: 12px 0;
       border-bottom: 1px solid var(--border);
+      transition: color 0.2s ease, padding-left 0.2s ease;
+    }
+    .navbar__mobile a:hover {
+      color: var(--navy);
+      padding-left: 8px;
     }
 
     @media (max-width: 900px) {
@@ -1039,7 +1251,7 @@
       gap: 48px;
       align-items: center;
     }
-    .footer-logo img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+    .footer-logo img { height: 120px; width: auto; border-radius: 0; object-fit: contain; mix-blend-mode: multiply; }
     .footer-social h4 {
       font-size: 0.8rem;
       font-weight: 600;
@@ -1183,7 +1395,7 @@
   <nav class="navbar" id="navbar">
     <div class="navbar__inner">
       <a href="#" class="navbar__logo">
-        <img src="Logo.jpg" alt="Aconcagua Analytics">
+        <img src="Logo-nuevo.png" alt="Aconcagua Analytics">
       </a>
       <ul class="navbar__links">
         <li><a href="#servicios">Servicios <span class="chevron">&#9660;</span></a></li>
@@ -1213,13 +1425,8 @@
 
   <!-- HERO -->
   <section class="hero" id="hero">
+    <div id="particles-hero" class="particle-container"></div>
     <div class="hero__photo"></div>
-    <!-- Decorative mark -->
-    <svg class="hero__mark" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="100" cy="100" r="90" stroke="white" stroke-width="3"/>
-      <circle cx="100" cy="100" r="60" fill="white" opacity="0.5"/>
-      <path d="M60 100 Q100 40 140 100 Q100 160 60 100Z" fill="white"/>
-    </svg>
     <div class="hero__content fade-up">
       <h1>la inteligencia<br>artificial para<br>su empresa</h1>
       <p class="hero__sub">
@@ -1297,8 +1504,6 @@
         </div>
         <h3>Retainer Mensual</h3>
         <p>Gestión continua de los flujos automatizados. Monitoreo, ajustes y reporte mensual de tiempo recuperado. Sin permanencia — mes a mes.</p>
-        <div class="svc-card__price">Desde $500.000 ARS/mes</div>
-        <div class="svc-card__usd">Precio según flujos activos</div>
         <p>La operación corre de nuestra parte. Su equipo no toca nada.</p>
         <a href="#contacto" class="svc-link">Consultar &rsaquo;</a>
       </div>
@@ -1306,28 +1511,24 @@
     <!-- Bottom 4 smaller cards -->
     <div class="services__row" id="svc-grid-bot">
       <div class="svc-sm fade-up">
-        <h4>Sistema Simple</h4>
+        <h4>Implementación Inicial</h4>
         <p>Un flujo automatizado completo para resolver el problema principal de su operativa.</p>
-        <div style="font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:700;color:var(--navy);margin-top:10px;">Desde $500.000 ARS</div>
-        <div style="font-size:0.72rem;color:var(--text-muted);">Precio según complejidad del flujo</div>
         <a href="#contacto" class="svc-link">Ver más &rsaquo;</a>
       </div>
       <div class="svc-sm fade-up">
-        <h4>Sistema Complejo</h4>
+        <h4>Implementación Avanzada</h4>
         <p>Múltiples flujos interconectados. Transformación completa de la operativa con panel de métricas.</p>
-        <div style="font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:700;color:var(--navy);margin-top:10px;">$1.400.000 – $3.500.000 ARS</div>
-        <div style="font-size:0.72rem;color:var(--text-muted);">Precio según alcance del proyecto</div>
         <a href="#contacto" class="svc-link">Ver más &rsaquo;</a>
       </div>
       <div class="svc-sm fade-up">
         <h4>Inmobiliarias</h4>
-        <p>Publicaciones multi-canal, verificación de consistencia y clasificación de consultas de leads.</p>
+        <p>Descripciones a medida del inmueble, publicación en los portales requeridos, verificación de garantes, viabilidad de inquilinos, armado de contratos y respuesta automática a consultas de leads.</p>
         <div style="font-size:0.72rem;color:var(--text-muted);margin-top:10px;">Ahorro típico: 10–12 hs/semana</div>
         <a href="#nichos" class="svc-link">Ver ROI &rsaquo;</a>
       </div>
       <div class="svc-sm fade-up">
         <h4>Estudios y escribanías</h4>
-        <p>Escritos, contratos y escrituras en una fracción del tiempo. Sin cambiar su flujo de trabajo.</p>
+        <p>Armado de contratos, escrituras, poderes y escritos judiciales. Borradores listos en minutos, legajos organizados automáticamente y respuesta a consultas frecuentes sin intervención manual.</p>
         <div style="font-size:0.72rem;color:var(--text-muted);margin-top:10px;">Ahorro típico: 12–15 hs/semana</div>
         <a href="#nichos" class="svc-link">Ver ROI &rsaquo;</a>
       </div>
@@ -1479,7 +1680,7 @@
       <div class="section-header fade-up" style="padding:0;margin-bottom:0;">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Nichos</span>
         <h2>Resultados concretos para cada tipo de empresa</h2>
-        <p>Cada industria tiene procesos distintos y tiempos distintos. Antes de implementar cualquier flujo, auditamos su operativa específica para identificar dónde está el mayor potencial de mejora.</p>
+        <p>Cada industria tiene procesos distintos y tiempos distintos. Los siguientes son algunos ejemplos de nichos — las implementaciones se adaptan a cualquier sector o rubro. Antes de implementar cualquier flujo, auditamos su operativa específica para identificar dónde está el mayor potencial de mejora.</p>
       </div>
       <div class="nichos__tabs fade-up">
         <button class="tab-btn active" data-tab="inmo">Inmobiliarias</button>
@@ -1492,13 +1693,13 @@
         <div class="niche-panel active fade-up" id="panel-inmo">
           <div class="niche-panel__left">
             <h3>Inmobiliarias</h3>
-            <p>Cada propiedad nueva genera trabajo repetitivo: redactar, publicar, responder, verificar. Ingresamos los datos una vez y el sistema genera la ficha técnica, la descripción comercial y el aviso adaptado para ZonaProp, Argenprop, MercadoLibre, Instagram y WhatsApp. También redacta borradores de contratos y verifica que todas las publicaciones activas estén vigentes y consistentes.</p>
+            <p>Cada propiedad nueva genera trabajo repetitivo: redactar, publicar, responder, verificar. Ingresamos los datos una vez y el sistema genera la ficha técnica, la descripción comercial y el aviso adaptado para ZonaProp y Argenprop. Automáticamente valida viabilidad de inquilinos y verifica garantes. También redacta borradores de contratos y mantiene todas las publicaciones activas vigentes y consistentes.</p>
             <div class="niche-tasks">
               <div class="niche-task">
                 <span class="t-before">30–45 min</span>
                 <span class="t-arrow">&#8594;</span>
                 <span class="t-after">2 min</span>
-                <span>Descripción de propiedad para ZonaProp, Argenprop, MercadoLibre, Instagram y WhatsApp</span>
+                <span>Descripción optimizada para los portales que la inmobiliaria requiera</span>
               </div>
               <div class="niche-task">
                 <span class="t-before">45–60 min</span>
@@ -1507,16 +1708,10 @@
                 <span>Borrador de contrato de alquiler o compraventa</span>
               </div>
               <div class="niche-task">
-                <span class="t-before">5–10 min</span>
-                <span class="t-arrow">&#8594;</span>
-                <span class="t-after">30 seg</span>
-                <span>Respuesta a consultas de leads</span>
-              </div>
-              <div class="niche-task">
                 <span class="t-before">Manual</span>
                 <span class="t-arrow">&#8594;</span>
                 <span class="t-after">Automático</span>
-                <span>Verificación cruzada de publicaciones entre portales</span>
+                <span>Sistema Verificador de Garantes y Viabilidad de Inquilino</span>
               </div>
             </div>
           </div>
@@ -1545,12 +1740,6 @@
                 <span class="t-arrow">&#8594;</span>
                 <span class="t-after">5 min</span>
                 <span>Armado de legajos y carpetas de cliente</span>
-              </div>
-              <div class="niche-task">
-                <span class="t-before">Manual</span>
-                <span class="t-arrow">&#8594;</span>
-                <span class="t-after">Automático</span>
-                <span>Clasificación y borrador de respuesta a consultas frecuentes</span>
               </div>
             </div>
           </div>
@@ -1589,7 +1778,8 @@
   </section>
 
   <!-- CÓMO FUNCIONA -->
-  <section class="como">
+  <section class="como" id="como">
+    <div id="particles-como" class="particle-container" style="clip-path: inset(0);"></div>
     <div class="como__inner">
       <div class="section-header fade-up">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Cómo funciona</span>
@@ -1600,14 +1790,14 @@
         <div class="step fade-up">
           <div class="step__num">01</div>
           <h3>Auditoría de flujos</h3>
-          <p>Entrevista de 45–60 minutos para mapear dónde se pierde tiempo. Informe PDF de 10–15 páginas con 3 opciones de implementación adaptadas a su operativa.</p>
+          <p>Análisis profundo de 45–60 minutos para identificar oportunidades de optimización de tiempo y recursos. Entregamos documento PDF detallado con 3 opciones de implementación específicas para su negocio y metodología de trabajo.</p>
           <span class="step__tag">Desde $200.000 ARS</span>
         </div>
         <div class="step fade-up">
           <div class="step__num">02</div>
           <h3>Implementación de sistemas</h3>
-          <p>Diseño y puesta en marcha de los flujos automatizados. Yo opero todo. Su equipo no necesita aprender ninguna herramienta nueva.</p>
-          <span class="step__tag">Sistema Simple o Complejo</span>
+          <p>Diseño, integración y puesta en marcha de los flujos automatizados en su operativa. Nuestro equipo se encarga de la configuración, integración con sus sistemas actuales y capacitación. Su equipo opera todo de forma intuitiva sin necesidad de herramientas adicionales.</p>
+          <span class="step__tag">Implementación a medida</span>
         </div>
         <div class="step fade-up">
           <div class="step__num">03</div>
@@ -1624,8 +1814,8 @@
     <div class="contacto__inner">
       <div class="contacto__left fade-up">
         <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:10px;">Contacto</span>
-        <h2>¿La IA puede optimizar mi operativa?</h2>
-        <p>30 minutos para saberlo. Analizamos su operativa y le decimos cuántas horas puede recuperar. Sin compromiso — si no hay fit real, lo decimos sin rodeos.</p>
+        <h2>¿Cuál es su potencial real de crecimiento?</h2>
+        <p>30 minutos para descubrirlo. Analizamos su operativa y cuantificamos exactamente cuántas horas y recursos puede optimizar. Evaluación sin compromiso — le indicamos si la implementación genera retorno para su negocio.</p>
         <a href="https://wa.me/542616849413" target="_blank" class="contact-wa">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
           Escribir por WhatsApp
@@ -1680,7 +1870,7 @@
   <footer class="footer-top">
     <div class="footer-top__inner">
       <div class="footer-logo">
-        <img src="Logo.jpg" alt="Aconcagua Analytics">
+        <img src="Logo-nuevo.png" alt="Aconcagua Analytics">
       </div>
       <div class="footer-social">
         <h4>Seguinos en las redes</h4>
@@ -1726,8 +1916,8 @@
       <div class="footer-col">
         <h4>Servicios</h4>
         <a href="#servicios">Auditoría de flujos</a>
-        <a href="#servicios">Sistema Simple</a>
-        <a href="#servicios">Sistema Complejo</a>
+        <a href="#servicios">Implementación Inicial</a>
+        <a href="#servicios">Implementación Avanzada</a>
         <a href="#servicios">Retainer mensual</a>
       </div>
       <div class="footer-col">
@@ -1969,6 +2159,193 @@
       });
     });
     initCountUps(document.getElementById('panel-inmo'));
+
+    // ─── HAMBURGER MENU MEJORADO ───────────────────────────────────
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (burger && mobileMenu) {
+      burger.addEventListener('click', (e) => {
+        e.preventDefault();
+        burger.classList.toggle('active');
+        mobileMenu.classList.toggle('open');
+        burger.setAttribute('aria-expanded', burger.classList.contains('active'));
+      });
+
+      // Cerrar menu al hacer click en un link
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          burger.classList.remove('active');
+          mobileMenu.classList.remove('open');
+          burger.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Cerrar menu al hacer scroll
+      window.addEventListener('scroll', () => {
+        if (mobileMenu.classList.contains('open')) {
+          burger.classList.remove('active');
+          mobileMenu.classList.remove('open');
+          burger.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // ─── INTERSECTION OBSERVER PARA ANIMACIONES ────────────────────
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-up').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ─── MEJORAS DE ACCESIBILIDAD ──────────────────────────────────
+    // Agregar aria-labels si no existen
+    document.querySelectorAll('.btn-cta, .hero-btn-primary, .hero-btn-secondary').forEach(btn => {
+      if (!btn.getAttribute('aria-label') && btn.textContent.trim()) {
+        // El texto del botón ya es descriptivo
+      }
+    });
+
+    // Mejorar navegación con teclado
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('open')) {
+        burger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.focus();
+      }
+    });
+
+    // ─── VALIDACIÓN DE CONTACTO MEJORADA ───────────────────────────
+    const contactForm = document.querySelector('.contacto form') || document.querySelector('form[data-contacto]');
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        const inputs = contactForm.querySelectorAll('input, textarea');
+        let isValid = true;
+
+        inputs.forEach(input => {
+          if (!input.value.trim()) {
+            input.style.borderColor = '#ef4444';
+            isValid = false;
+          } else {
+            input.style.borderColor = '';
+          }
+
+          // Validación de email
+          if (input.type === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(input.value)) {
+              input.style.borderColor = '#ef4444';
+              isValid = false;
+            }
+          }
+        });
+
+        if (!isValid) {
+          e.preventDefault();
+          alert('Por favor completa todos los campos correctamente.');
+        }
+      });
+    }
+
+    // ─── PRELOAD IMAGES ────────────────────────────────────────────
+    window.addEventListener('load', () => {
+      document.querySelectorAll('img').forEach(img => {
+        img.setAttribute('loading', 'lazy');
+      });
+    });
+
+    // ─── TSPARTICLES — HERO ────────────────────────────────────
+    tsParticles.load("particles-hero", {
+      background: { color: { value: "transparent" } },
+      fpsLimit: 60,
+      particles: {
+        number: {
+          value: 60,
+          density: { enable: true, area: 900 }
+        },
+        color: { value: "#4FC3C8" },
+        opacity: { value: 0.45 },
+        size: {
+          value: { min: 1, max: 2.5 },
+          random: true
+        },
+        links: {
+          enable: true,
+          color: "#4FC3C8",
+          distance: 140,
+          opacity: 0.3,
+          width: 0.6
+        },
+        move: {
+          enable: true,
+          speed: 0.7,
+          direction: "none",
+          random: true,
+          straight: false,
+          outModes: { default: "bounce" }
+        }
+      },
+      interactivity: {
+        detectsOn: "window",
+        events: {
+          onHover: { enable: true, mode: "grab" }
+        },
+        modes: {
+          grab: {
+            distance: 200,
+            links: { opacity: 0.7 }
+          }
+        }
+      },
+      detectRetina: true
+    }).then(container => {
+      // Forzar canvas al tamaño del hero
+      const hero = document.getElementById('hero');
+      const canvas = document.querySelector('#particles-hero canvas');
+      if (canvas && hero) {
+        const h = hero.offsetHeight;
+        const w = hero.offsetWidth;
+        canvas.setAttribute('height', h);
+        canvas.setAttribute('width', w);
+        canvas.style.height = h + 'px';
+        canvas.style.width = w + 'px';
+        container.canvas.size.height = h;
+        container.canvas.size.width = w;
+        container.refresh();
+      }
+    });
+
+    // ─── PARTÍCULAS SECCIÓN CÓMO FUNCIONA ──────────────────────────
+    tsParticles.load("particles-como", {
+      background: { color: { value: "transparent" } },
+      fpsLimit: 60,
+      particles: {
+        number: { value: 50, density: { enable: true, area: 900 } },
+        color: { value: "#4FC3C8" },
+        opacity: { value: 0.35 },
+        size: { value: { min: 1, max: 2 }, random: true },
+        links: { enable: true, color: "#4FC3C8", distance: 130, opacity: 0.25, width: 0.5 },
+        move: { enable: true, speed: 0.6, direction: "none", random: true, outModes: { default: "bounce" } }
+      },
+      interactivity: {
+        detectsOn: "window",
+        events: { onHover: { enable: true, mode: "grab" } },
+        modes: { grab: { distance: 200, links: { opacity: 0.65 } } }
+      },
+      detectRetina: true
+    });
 
     // ─── SMOOTH SCROLL ─────────────────────────────────────────────
     document.querySelectorAll('a[href^="#"]').forEach(a => {
